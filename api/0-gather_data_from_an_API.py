@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-Python script to retrieve and display an employee's TODO list progress
+Python script to retrieve and display an employee's TODO list progress.
 Usage: ./gather_data_from_an_API.py employee_id
 """
 
