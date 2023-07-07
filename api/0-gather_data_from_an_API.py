@@ -30,4 +30,4 @@ def get_employee_todo_progress(employee_id):
     for task in done_tasks:
         print("\t", task)
 
-# Example usage: get_employee_todo_progress(1)
+
