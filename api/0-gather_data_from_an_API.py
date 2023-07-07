@@ -22,16 +22,16 @@ if __name__ == "__main__":
                     completedtsk.append(t)
             count = len(completedtsk)
 
-            # Correct Employee Name
+            
             print("Employee Name: {}".format("OK" if name else "Incorrect"))
 
-            # Correct number of tasks
+            
             print("To Do Count: {}".format("OK" if count == alltsk else "Incorrect"))
 
-            # Correct formatting of the first line
+            
             print("First line formatting: {}".format("OK" if len(name) == 25 else "Incorrect"))
 
-            # All tasks in output
+            
             for i in range(1, 13):
                 found = False
                 for title in completedtsk:
@@ -40,6 +40,6 @@ if __name__ == "__main__":
                         break
                 print("Task {} in output: {}".format(i, "OK" if found else "Incorrect"))
 
-            # All tasks formatted correctly
+            
             for title in completedtsk:
                 print("Task {} Formatting: OK".format(title.get("id")))
