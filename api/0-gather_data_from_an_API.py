@@ -1,45 +1,33 @@
-#!/usr/bin/python3
-'''
-Python script that returns information using REST API
-'''
 import requests
-from sys import argv
 
-if __name__ == "__main__":
-    if len(argv) > 1:
-        user = argv[1]
-        url = "https://jsonplaceholder.typicode.com/"
-        req = requests.get("{}users/{}".format(url, user))
-        name = req.json().get("name")
-        if name is not None:
-            jreq = requests.get(
-                "{}todos?userId={}".format(
-                    url, user)).json()
-            alltsk = len(jreq)
-            completedtsk = []
-            for t in jreq:
-                if t.get("completed") is True:
-                    completedtsk.append(t)
-            count = len(completedtsk)
+def get_employee_todo_progress(employee_id):
+    base_url = 'https://jsonplaceholder.typicode.com'
+    employee_url = f'{base_url}/users/{employee_id}'
+    todos_url = f'{base_url}/todos?userId={employee_id}'
 
-            
-            print("Employee Name: {}".format("OK" if name else "Incorrect"))
+    # Fetch employee information
+    response = requests.get(employee_url)
+    if response.status_code != 200:
+        print(f"Failed to retrieve employee information for ID: {employee_id}")
+        return
 
-            
-            print("To Do Count: {}".format("OK" if count == alltsk else "Incorrect"))
+    employee_data = response.json()
+    employee_name = employee_data['name']
 
-            
-            print("First line formatting: {}".format("OK" if len(name) == 25 else "Incorrect"))
+    # Fetch employee's TODO list
+    response = requests.get(todos_url)
+    if response.status_code != 200:
+        print(f"Failed to retrieve TODO list for employee: {employee_name}")
+        return
 
-            
-            for i in range(1, 13):
-                found = False
-                for title in completedtsk:
-                    if title.get("id") == i:
-                        found = True
-                        break
-                print("Task {} in output: {}".format(i, "OK" if found else "Incorrect"))
+    todos_data = response.json()
+    total_tasks = len(todos_data)
+    done_tasks = [todo['title'] for todo in todos_data if todo['completed']]
 
-            
-            for title in completedtsk:
-                print("Task {} Formatting: OK".format(title.get("id")))
+    # Display TODO list progress
+    print(f"Employee {employee_name} is done with tasks ({len(done_tasks)}/{total_tasks}):")
+    print(f"{employee_name}: {len(done_tasks)}/{total_tasks}")
+    for task in done_tasks:
+        print("\t", task)
+
+# Example usage: get_employee_todo_progress(1)
