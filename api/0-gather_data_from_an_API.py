@@ -1,44 +1,27 @@
 #!/usr/bin/python3
+'''
+Python script that returns information using REST API
+'''
 import requests
+from sys import argv
 
-
-def get_employee_todo_progress(employee_id):
-    """
-    Retrieves and displays information about an employee's TODO list progress.
-
-    Args:
-        employee_id (int): The ID of the employee.
-
-    """
-    base_url = 'https://jsonplaceholder.typicode.com'
-    employee_url = f'{base_url}/users/{employee_id}'
-    todos_url = f'{base_url}/todos?userId={employee_id}'
-
-    # Fetch employee information
-    response = requests.get(employee_url)
-    if response.status_code != 200:
-        print(f"Failed to retrieve employee information for ID: {employee_id}")
-        return
-
-    employee_data = response.json()
-    employee_name = employee_data['name']
-
-    # Fetch employee's TODO list
-    response = requests.get(todos_url)
-    if response.status_code != 200:
-        print(f"Failed to retrieve TODO list for employee: {employee_name}")
-        return
-
-    todos_data = response.json()
-    total_tasks = len(todos_data)
-    done_tasks = [todo['title'] for todo in todos_data if todo['completed']]
-
-    # Display TODO list progress
-    print(f"Employee {employee_name} is done with tasks ({len(done_tasks)}/{total_tasks}):")
-    print(f"{employee_name}: {len(done_tasks)}/{total_tasks}")
-    for task in todos_data:
-        task_title = task['title']
-        if task['completed']:
-            print("\t", task_title)
-
-# Example usage: get_employee_todo_progress(1)
+if __name__ == "__main__":
+    if len(argv) > 1:
+        user = argv[1]
+        url = "https://jsonplaceholder.typicode.com/"
+        req = requests.get("{}users/{}".format(url, user))
+        name = req.json().get("name")
+        if name is not None:
+            jreq = requests.get(
+                "{}todos?userId={}".format(
+                    url, user)).json()
+            alltsk = len(jreq)
+            completedtsk = []
+            for t in jreq:
+                if t.get("completed") is True:
+                    completedtsk.append(t)
+            count = len(completedtsk)
+            print("Employee {} is done with tasks({}/{}):"
+                  .format(name, count, alltsk))
+            for title in completedtsk:
+                print("\t {}".format(title.get("title")))
